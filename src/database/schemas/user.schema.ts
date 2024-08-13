@@ -1,5 +1,6 @@
 import { DataTypes, type Model } from 'sequelize';
 import db_connection from '../connection';
+import { PASSWORD_LENGTH } from '../../constants';
 
 export enum UserTypeEnum {
     ADMIN = 'admin',
@@ -44,7 +45,7 @@ const UserModel = db_connection.define<UserSchema>('user', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            min: 8,
+            min: PASSWORD_LENGTH,
         }
     },
     type: {

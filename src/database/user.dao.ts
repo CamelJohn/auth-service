@@ -1,9 +1,19 @@
-import UserModel, { UserCreationAttributes } from './schemas/user.schema';
+import UserModel, { UserAttributes, UserCreationAttributes } from './schemas/user.schema';
 
 const userDao = {
     findOne: async (user_id: string) => {
         try {
-            const user = await UserModel.findOne({ where: { id: user_id } });
+            const user = await UserModel.findByPk(user_id);
+
+            return user;
+        } catch (error) {
+            // TODO: add winston logger herer
+            throw error;
+        }
+    },
+    findBy: async (email: string) => {
+        try {
+            const user = await UserModel.findOne({ where: { email } });
 
             return user;
         } catch (error) {
@@ -21,9 +31,9 @@ const userDao = {
             throw error;
         }
     },
-    update: async (user_id: string, user: UserCreationAttributes) => {
+    update: async (user_id: string, dto: Partial<UserAttributes>) => {
         try {
-            const updated_user = await UserModel.update(user, { where: { id: user_id } });
+            const updated_user = await UserModel.update(dto, { where: { id: user_id } });
             
             return updated_user;
         } catch (error) {
