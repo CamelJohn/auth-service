@@ -17,11 +17,18 @@ const error: ErrorRequestHandlerExtended = (err, _, res, next) => {
     });
 }
 
-const health_check: HealthCheckRequestHandler = (_, res, next) => {
-    res.status(200).json({
-        message: 'OK',
-        code: 200
-    });
+const health_check: HealthCheckRequestHandler = async (_, res, next) => {
+    try {
+        res.status(200).json({
+            message: 'OK',
+            code: 200
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: `Server Is Down. \n[Original Error]: ${error}`,
+            code: 500
+        });
+    }
 }
 
 const catch_all: RequestHandler = (req, __, next) => {
