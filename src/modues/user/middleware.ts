@@ -14,7 +14,7 @@ interface SignUpUser {
 interface SignUpUserRequest extends RequestHandler<any, SignUpUser> {}
 interface SignInUserRequest extends RequestHandler<any, SignInUser> {}
 
-export const user_exists: SignUpUserRequest = async (req, res, next) => {
+export const user_should_not_exist: SignUpUserRequest = async (req, res, next) => {
     try {
         const user = await userDao.findOne(req.body.email);
 
@@ -28,7 +28,7 @@ export const user_exists: SignUpUserRequest = async (req, res, next) => {
     }
 }
 
-export const user_does_not_exist: SignInUserRequest = async (req, res, next) => {
+export const user_should_exist: SignInUserRequest = async (req, res, next) => {
     try {
         const user = await userDao.findOne(req.body.email);
 

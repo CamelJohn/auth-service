@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { type ErrorRequestHandlerExtended, type HealthCheckRequestHandler } from './interfaces';
+import db from './database';
 
 const error: ErrorRequestHandlerExtended = (err, _, res, next) => {
     const status_code = isHttpError(err) ? err.status : 500;
@@ -17,11 +18,19 @@ const error: ErrorRequestHandlerExtended = (err, _, res, next) => {
     });
 }
 
-const health_check: HealthCheckRequestHandler = (_, res, next) => {
-    res.status(200).json({
-        message: 'OK',
-        code: 200
-    });
+const health_check: HealthCheckRequestHandler = async (_, res, next) => {
+    try {
+        await db.$test_connection();
+        res.status(200).json({
+            message: 'OK',
+            code: 200
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: `Server Is Down. \n[Original Error]: ${error}`,
+            code: 500
+        });
+    }
 }
 
 const catch_all: RequestHandler = (req, __, next) => {
